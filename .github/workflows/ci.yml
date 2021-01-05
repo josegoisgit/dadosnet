@@ -1,0 +1,21 @@
+name: main
+on: [push, repository_dispatch]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    name: Build and test
+    steps:
+      - uses: styfle/cancel-workflow-action@0.6.0
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v1
+
+      - uses: actions/cache@v2
+        with:
+          path: '/home/runner/work/codemirror.next/codemirror.next/node_modules'
+          key: ${{ runner.os }}-node-modules
+
+      - run: node bin/cm.js install
+
+      - run: npm test
